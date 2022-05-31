@@ -1,8 +1,10 @@
 package com.example.cleanahcgitecture.Domain
 
+import androidx.lifecycle.LiveData
+
 interface ShopItemRepository {
 
-    fun getShopList():List<ShopItem>
+    fun getShopList():LiveData<List<ShopItem>>
 
     fun getShopItem(id: Int) : ShopItem
 

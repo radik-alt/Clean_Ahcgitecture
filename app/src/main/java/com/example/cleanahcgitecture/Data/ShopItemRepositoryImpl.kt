@@ -1,16 +1,31 @@
 package com.example.cleanahcgitecture.Data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.cleanahcgitecture.Domain.ShopItem
 import com.example.cleanahcgitecture.Domain.ShopItemRepository
 import java.lang.RuntimeException
 
 object ShopItemRepositoryImpl : ShopItemRepository{
 
+    private val shopLiveData = MutableLiveData<List<ShopItem>>()
     private val shopList = mutableListOf<ShopItem>()
     private var autoincrementID = 0
 
-    override fun getShopList(): List<ShopItem> {
-        return shopList.toList()
+    init {
+        for (i in 0 until 10){
+            var name = ShopItem("Name $i", i, true)
+            shopList.add(name)
+        }
+    }
+
+    override fun getShopList(): LiveData<List<ShopItem>> {
+        updateList()
+        return shopLiveData
+    }
+
+    private fun updateList(){
+        shopLiveData.value = shopList.toList()
     }
 
     override fun getShopItem(id: Int): ShopItem {
@@ -22,6 +37,7 @@ object ShopItemRepositoryImpl : ShopItemRepository{
             shopItem.id = autoincrementID++
         }
         shopList.add(shopItem)
+        updateList()
     }
 
     override fun changeShopItem(shopItem: ShopItem) {
